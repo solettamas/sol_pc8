@@ -27,6 +27,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 add_executable(sensor_simulator src/sensor_simulator.cpp)
 ament_target_dependencies(sensor_simulator rclcpp std_msgs)
 
+add_executable(data_processor src/data_processor.cpp)
+ament_target_dependencies(data_processor rclcpp std_msgs )
+
 
 set(ament_dependencies
   rclcpp
@@ -38,6 +41,7 @@ rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} rosidl_typesupport_cpp)
 
 target_link_libraries(sensor_simulator "${cpp_typesupport_target}")
+target_link_libraries(data_processor "${cpp_typesupport_target}")
 
 ament_export_dependencies(rosidl_default_runtime)
 
@@ -46,6 +50,7 @@ install(DIRECTORY launch
 
 install(TARGETS
  sensor_simulator
+  data_processor
 DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
