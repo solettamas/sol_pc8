@@ -16,8 +16,12 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME}
+set(msg_files
   "msg/Distances.msg"
+)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  ${msg_files}
 )
 
 add_executable(sensor_simulator src/sensor_simulator.cpp)
@@ -35,7 +39,7 @@ rosidl_get_typesupport_target(cpp_typesupport_target
 
 target_link_libraries(sensor_simulator "${cpp_typesupport_target}")
 
-
+ament_export_dependencies(rosidl_default_runtime)
 
 install(DIRECTORY launch
   DESTINATION share/${PROJECT_NAME})

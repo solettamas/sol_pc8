@@ -2,6 +2,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <random>
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -18,15 +19,21 @@ public:
     SensorSimulator() : Node("sensor_simulator"), count_(0)
     {
         publisher_ = this->create_publisher<sol_pc8::msg::Distances>("distance", 10);
-        timer_ = this->create_wall_timer(
-            500ms, std::bind(&SensorSimulator::timer_callback, this));
+        timer_ = this->create_wall_timer(500ms, std::bind(&SensorSimulator::timer_callback, this));
     }
 
 private:
     void timer_callback()
     {
+        static std::default_random_engine generator(std::random_device{}());
+        static std::uniform_real_distribution<float> distribution(0.2f, 2.5f);
+        
         auto message = sol_pc8::msg::Distances();
-        message.values = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+
+        for (size_t i = 0; i < message.values.size(); i++) {
+        message.values[i] = distribution(generator);
+        }
+        
         publisher_->publish(message);
     }
     rclcpp::TimerBase::SharedPtr timer_;
